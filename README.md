@@ -82,7 +82,7 @@ mkdir results
 
 ##### Phase Retrieval
 
-Now you are ready for run. For **phase retrieval** with DAPS-1k in 4 runs for $10$ demo images in `dataset/demo`:
+Now you are ready for run. For **phase retrieval** with SITCOM in 4 runs for $10$ demo images in `dataset/demo`:
 
 ```
 python posterior_sample.py \
