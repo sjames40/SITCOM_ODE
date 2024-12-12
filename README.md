@@ -42,10 +42,10 @@ To address the instability issue in SITCOM phase retrieval, we drew inspiration 
 Lower version of PyTorch with proper CUDA should work but not be fully tested.
 
 ```
-# in DAPS folder
+# in SITCOM_phase_retrieval folder
 
-conda create -n DAPS python=3.8
-conda activate DAPS
+conda create -n SITCOM_phase_retrieval python=3.8
+conda activate SITCOM_phase_retrieval
 
 pip install -r requirements.txt
 
@@ -53,29 +53,15 @@ pip install -r requirements.txt
 conda install pytorch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
-We use [bkse](https://github.com/VinAIResearch/blur-kernel-space-exploring) for nonlinear blurring and [motionblur](https://github.com/LeviBorodenko/motionblur) for motion blur. **No further action required then**.
-
-
-
 #### 2. Prepare the pretrained checkpoint
 
 Download the public available FFHQ checkpoint (ffhq_10m.pt) [here](https://drive.google.com/drive/folders/1jElnRoFv7b31fG0v6pTSQkelbSX3xGZh).
 
 ```
-# in DAPS folder
+# in SITCOM_phase_retrieval folder
 
 mkdir checkpoint
 mv {DOWNLOAD_DIR}/ffqh_10m.pt checkpoint/ffhq256.pt
-```
-
-
-
-**(Optional)** For nonlinear deblur task, we need the pretrained model from [bkse](https://github.com/VinAIResearch/blur-kernel-space-exploring) at [here](https://drive.google.com/file/d/1vRoDpIsrTRYZKsOMPNbPcMtFDpCT6Foy/view?usp=drive_link):
-
-```
-# in DAPS folder
-
-mv {DOWNLOAD_DIR}/GOPRO_wVAE.pth forward_operator/bkse/experiments/pretrained
 ```
 
 
@@ -114,25 +100,4 @@ name=phase_retrieval_demo \
 gpu=0
 ```
 
-It takes about $8$ minutes ($2$ for each run) and $6G$ GPU memory on a single NVIDIA A100-SXM4-80GB GPU. The results are saved at foloder `\results`. 
-
-
-
-##### All Tasks
-
-```
-python posterior_sample.py \
-+data=demo \
-+model=ffhq256ddpm \
-+task={TASK_NAME} \
-+sampler=edm_daps \
-save_dir=results \
-num_runs=1 \
-sampler.diffusion_scheduler_config.num_steps=5 \
-sampler.annealing_scheduler_config.num_steps=200 \
-batch_size=10 \
-data.start_id=0 data.end_id=10 \
-name={SUB_FOLDER_NAME} \
-gpu=0
-```
 
