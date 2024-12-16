@@ -1,36 +1,7 @@
 # SITCOM_phase_retrieval
 To address the instability issue in SITCOM phase retrieval, we drew inspiration from DAPS and incorporated an ODE solver to replace the Tweedie formula update, enabling a more robust and accurate solution. The revised approach integrates an Euler solver, enhanced with a data consistency projection, ensuring the ODE solution maintains greater consistency throughout the process. Additionally, we implemented a data consistency update guided by a Lagrange multiplier, further refining the overall stability and performance of the method. The updated code is provided in the sampler class DiffusionSampler for the eulder method.
 
-    def _euler(self, model, x_start,operator, measurement, SDE=False, record=False, verbose=False):
-        """
-            Euler's method for sampling from the diffusion process.
-            
-        """
-        if record:
-            self.trajectory = Trajectory()
-        pbar = tqdm.trange(self.scheduler.num_steps) if verbose else range(self.scheduler.num_steps)
-        scale = 0.1
-        x = x_start
-        for step in pbar:
-            sigma, factor = self.scheduler.sigma_steps[step], self.scheduler.factor_steps[step]
-            score = model.score(x, sigma)
-            if SDE:
-                epsilon = torch.randn_like(x)
-                x = x + factor * score + np.sqrt(factor) * epsilon
-            else:
-                x = x + factor * score * 0.5
-            x_hat = x.clone().detach().requires_grad_(True)
-            difference = operator.error(x_hat,measurement)
-            norm = torch.linalg.norm(difference)
-            norm_grad = torch.autograd.grad(outputs=norm, inputs=x_hat)[0]
-            # record
-            x -= norm_grad*scale
-            if record:
-                if SDE:
-                    self._record(x, score, sigma, factor, epsilon)
-                else:
-                    self._record(x, score, sigma, factor)
-        return x
+
 ## Getting started
 
 #### 1. Prepare the Environment
