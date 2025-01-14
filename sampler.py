@@ -130,7 +130,7 @@ class DiffusionSampler(nn.Module):
         if record:
             self.trajectory = Trajectory()
         pbar = tqdm.trange(self.scheduler.num_steps) if verbose else range(self.scheduler.num_steps)
-        scale = 0.1
+        scale = 1
         x = x_start
         for step in pbar:
             sigma, factor = self.scheduler.sigma_steps[step], self.scheduler.factor_steps[step]
